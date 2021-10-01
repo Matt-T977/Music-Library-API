@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.fields import CharField
+from django.db.models.fields import BooleanField, CharField, IntegerField
 
 # Create your models here.
 class Song(models.Model):
@@ -8,3 +8,6 @@ class Song(models.Model):
     album = models.CharField(max_length=50)
     release_date = models.DateTimeField()
     genre = CharField(max_length=50)
+    liked = BooleanField(default=False)
+    number_of_likes = IntegerField(default=0)
+    number_of_dislikes = IntegerField(default=0)
