@@ -8,6 +8,5 @@ class Song(models.Model):
     album = models.CharField(max_length=50)
     release_date = models.DateTimeField()
     genre = CharField(max_length=50)
-    liked = BooleanField(default=False)
     number_of_likes = IntegerField(default=0)
     number_of_dislikes = IntegerField(default=0)

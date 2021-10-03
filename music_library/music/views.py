@@ -50,38 +50,24 @@ class SongDetail(APIView):
         song.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def patch(self, request, pk):
-        song = self.get_object(pk)
-        if song.liked == True:
-            song.number_of_likes += 1
-            song.liked = False
-            serializer = SongSerializer(song)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        elif song.liked == False:
-            song.number_of_dislikes += 1
-            serializer = SongSerializer(song)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-
 class SongLikes(APIView):
 
     def patch(self, request, pk):
         song = SongDetail.get_object(self, pk)
-        if request == True:
-            song.number_of_likes += 1
-            serializer = SongSerializer(song)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            serializer = SongSerializer(song)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        song.number_of_likes += 1
+        serializer = SongSerializer(song, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SongDislikes(APIView):
+
+    def patch(self, request, pk):
+        song = SongDetail.get_object(self, pk)
+        song.number_of_dislikes += 1
+        serializer = SongSerializer(song, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
